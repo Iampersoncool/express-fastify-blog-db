@@ -1,14 +1,12 @@
-const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
-const { v4: Uuid } = require('uuid');
+const crypto = require('crypto');
 const Post = require('../models/Post');
+const compareString = require('../utils/compareString');
 
 const postsRoute = async (app, opts, done) => {
-  const uuid = Uuid();
-  // sendMail(uuid, hash);
+  const string = crypto.randomBytes(48).toString('hex');
 
-  const salt = await bcrypt.genSalt();
-  const hash = await bcrypt.hash(uuid, salt);
+  // sendMail(uuid, hash);
 
   app
     .get('/new', (request, reply) => {
@@ -18,7 +16,7 @@ const postsRoute = async (app, opts, done) => {
       try {
         const { secretCode, title, date, description, rawMarkdown } =
           request.body;
-        const match = await bcrypt.compare(secretCode, hash);
+        const match = await compareString(secretCode, string);
 
         if (match) {
           await Post.create({
@@ -59,7 +57,7 @@ const postsRoute = async (app, opts, done) => {
       const { secretCode } = request.body;
       const { title, date, description, rawMarkdown, slug } =
         request.body.stuff;
-      const match = await bcrypt.compare(secretCode, hash);
+      const match = await compareString(secretCode, string);
 
       if (match) {
         await Post.findOneAndUpdate(
@@ -86,7 +84,7 @@ const postsRoute = async (app, opts, done) => {
     try {
       const { secretCode, slug } = request.body;
 
-      const match = await bcrypt.compare(secretCode, hash);
+      const match = await compareString(secretCode, string);
       if (!match) return reply.status(403).send('Invalid code');
 
       await Post.findOneAndDelete({ slug });

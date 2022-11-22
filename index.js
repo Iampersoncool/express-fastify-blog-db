@@ -69,19 +69,6 @@ app.addHook('preHandler', (request, reply, done) => {
   done();
 });
 
-// app.addContentTypeParser(
-//   'application/json',
-//   { parseAs: 'string' },
-//   function (req, body, done) {
-//     try {
-//       done(null, JSON.parse(body));
-//     } catch (err) {
-//       err.statusCode = 400;
-//       done(err, null);
-//     }
-//   }
-// );
-
 app.get('/', async (request, reply) => {
   const posts = await Posts.find();
 

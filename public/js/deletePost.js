@@ -5,7 +5,7 @@ deleteBtns.forEach((deleteBtn, i) => {
   deleteBtn.addEventListener('click', async () => {
     const code = prompt('Enter code here');
 
-    if (code === null) {
+    if (code === null || code.trim() === '') {
       return console.log('canceled');
     }
 
