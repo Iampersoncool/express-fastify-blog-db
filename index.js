@@ -25,7 +25,7 @@ const port = process.env.PORT || 3000;
 
 app.register(fastifyRateLmit, {
   max: 100,
-  timeWindow: '4 minutes',
+  timeWindow: '1 minute',
 });
 
 app.register(fastifyCompress, {
