@@ -1,0 +1,36 @@
+{
+  "name": "express-fastify-blog-db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "@fastify/compress": "^6.1.1",
+    "@fastify/cors": "^8.2.0",
+    "@fastify/formbody": "^7.3.0",
+    "@fastify/helmet": "^10.0.2",
+    "@fastify/static": "^6.5.0",
+    "@fastify/view": "^7.1.2",
+    "bcrypt": "^5.1.0",
+    "dompurify": "^2.4.1",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "fastify": "^4.10.0",
+    "jsdom": "^20.0.3",
+    "marked": "^4.2.3",
+    "moment": "^2.29.4",
+    "mongoose": "^6.7.2",
+    "nodemailer": "^6.8.0",
+    "slugify": "^1.6.5",
+    "uuid": "^9.0.0"
+  }
+}

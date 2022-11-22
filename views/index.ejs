@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Javascript Blog</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/css/index.css">
+  <script src="/static/js/deletePost.js" defer></script>
+</head>
+<body>
+  <div class="d-flex flex-column align-items-center gap-4">
+    <h1 class="display-4">Posts</h1>
+
+    <% posts?.forEach(post => { %> 
+      <div class="d-flex flex-column align-items-center card p-3" id="post">
+        <h1><%= post.title %></h1>
+        <p><%= formatDate(post.date, 'LL') %></p>
+        <p><%= truncateString(post.description, 26) %></p>
+        <p class="d-none slug"><%= post.slug %></p>
+        
+        <div class="w-100 text-center">
+          <a href="/posts/edit/<%= post.slug %>" class="btn btn-secondary w-25">Edit post</a>
+          <a href="/posts/<%= post.slug %>" class="btn btn-primary w-25">Read more</a>
+          <button class="btn btn-danger w-25 delete-post-btn">Delete post</button>
+        </div>
+      </div>
+    <% }) %> 
+  </div>
+</body>
+</html>
