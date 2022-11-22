@@ -1,40 +1,18 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const Post = require('../models/Post');
-const compareString = require('../utils/compareString');
+
+const createPost = require('./posts/createPost');
+const editPost = require('./posts/editPost');
+const deletePost = require('./posts/deletePost');
 
 const postsRoute = async (app, opts, done) => {
   const string = crypto.randomBytes(48).toString('hex');
-
   // sendMail(uuid, hash);
 
-  app
-    .get('/new', (request, reply) => {
-      return reply.view('./views/new.ejs');
-    })
-    .post('/new', async (request, reply) => {
-      try {
-        const { secretCode, title, date, description, rawMarkdown } =
-          request.body;
-        const match = await compareString(secretCode, string);
-
-        if (match) {
-          await Post.create({
-            title,
-            date,
-            description,
-            rawMarkdown,
-          });
-
-          return reply.send('Successfully created post!');
-        }
-
-        return reply.status(403).send('Invalid Code');
-      } catch (e) {
-        console.log(e);
-        reply.status(500).send('An error occured creating the post.');
-      }
-    });
+  app.get('/new', (request, reply) => {
+    return reply.view('./views/new.ejs');
+  });
 
   app.get('/:slug', async (request, reply) => {
     const post = await Post.findOne({ slug: request.params.slug });
@@ -52,46 +30,16 @@ const postsRoute = async (app, opts, done) => {
     return reply.view('./views/edit.ejs', { post });
   });
 
-  app.put('/edit', async (request, reply) => {
-    try {
-      const { secretCode } = request.body;
-      const { title, date, description, rawMarkdown, slug } =
-        request.body.stuff;
-      const match = await compareString(secretCode, string);
-
-      if (match) {
-        await Post.findOneAndUpdate(
-          { slug },
-          {
-            title,
-            date,
-            description,
-            rawMarkdown,
-          }
-        );
-
-        return reply.send('Successfully updated post!');
-      }
-
-      return reply.status(403).send('Invalid Code');
-    } catch (e) {
-      console.error(e);
-      reply.status(500).send('Error updating ');
-    }
+  app.post('/new', (request, reply) => {
+    createPost(request, reply, string);
   });
 
-  app.delete('/delete', async (request, reply) => {
-    try {
-      const { secretCode, slug } = request.body;
+  app.put('/edit', (request, reply) => {
+    editPost(request, reply, string);
+  });
 
-      const match = await compareString(secretCode, string);
-      if (!match) return reply.status(403).send('Invalid code');
-
-      await Post.findOneAndDelete({ slug });
-    } catch (e) {
-      console.error(e);
-      reply.status(500).send('Error deleting');
-    }
+  app.delete('/delete', (request, reply) => {
+    deletePost(request, reply, string);
   });
 
   done();
@@ -121,4 +69,6 @@ async function sendMail(uuid) {
   }
 }
 
-module.exports = postsRoute;
+module.exports = {
+  postsRoute,
+};

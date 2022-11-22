@@ -8,6 +8,7 @@ const fastifyView = require('@fastify/view').default;
 const fastifyCors = require('@fastify/cors').default;
 const fastifyHelmet = require('@fastify/helmet').default;
 const fastifyFormBody = require('@fastify/formbody');
+const fastifyRateLmit = require('@fastify/rate-limit');
 
 const ejs = require('ejs');
 const moment = require('moment');
@@ -15,12 +16,17 @@ const moment = require('moment');
 const db = require('./db');
 const Posts = require('./models/Post');
 
-const postsRoute = require('./routes/posts');
+const { postsRoute } = require('./routes/posts');
 
 const app = Fastify({
   ignoreTrailingSlash: true,
 });
 const port = process.env.PORT || 3000;
+
+app.register(fastifyRateLmit, {
+  max: 100,
+  timeWindow: '4 minutes',
+});
 
 app.register(fastifyCompress, {
   global: true,
