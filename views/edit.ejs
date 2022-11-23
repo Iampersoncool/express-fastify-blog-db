@@ -13,12 +13,11 @@
   <div class="d-flex flex-column align-items-center">
     <h1>Edit Post</h1>
 
-    <form action="/posts/edit" method="PUT" class="d-flex flex-column align-items-center gap-3 w-25 mw-50">
+    <form action="/posts/edit" method="PUT" data-slug="<%= post.slug %>" class="d-flex flex-column align-items-center gap-3 w-25 mw-50">
       <div class="form-group w-100">
         <label for="pwd">code:</label>
         <input type="password" placeholder="code" name="secretCode" class="form-control" id="pwd" required>
       </div>
-      <div class="d-none" id="slug"><%= post.slug %></div>
       <div class="form-group w-100">
         <label for="title">Post title:</label>
         <input type="text" value="<%= post.title %>" placeholder="title" name="title" class="form-control" id="title" autocomplete="off" required>

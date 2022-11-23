@@ -1,9 +1,12 @@
 const Post = require('../../models/Post');
 const compareString = require('../../utils/compareString');
+const getCode = require('../../utils/getCode');
 
-const editPost = async (request, reply, string) => {
+const editPost = async (request, reply) => {
   try {
     const { secretCode } = request.body;
+    const string = getCode();
+
     const { title, date, description, rawMarkdown, slug } = request.body.stuff;
     const match = await compareString(secretCode, string);
 

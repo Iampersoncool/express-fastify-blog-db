@@ -7,7 +7,7 @@ const editPost = require('./posts/editPost');
 const deletePost = require('./posts/deletePost');
 
 const postsRoute = async (app, opts, done) => {
-  const string = crypto.randomBytes(48).toString('hex');
+  process.env.SECRET_STRING = crypto.randomBytes(48).toString('hex');
   // sendMail(uuid, hash);
 
   app.get('/new', (request, reply) => {
@@ -30,17 +30,9 @@ const postsRoute = async (app, opts, done) => {
     return reply.view('./views/edit.ejs', { post });
   });
 
-  app.post('/new', (request, reply) => {
-    createPost(request, reply, string);
-  });
-
-  app.put('/edit', (request, reply) => {
-    editPost(request, reply, string);
-  });
-
-  app.delete('/delete', (request, reply) => {
-    deletePost(request, reply, string);
-  });
+  app.post('/new', createPost);
+  app.put('/edit', editPost);
+  app.delete('/delete', deletePost);
 
   done();
 };

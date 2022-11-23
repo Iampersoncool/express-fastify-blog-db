@@ -19,12 +19,11 @@
         <h1><%= post.title %></h1>
         <p><%= formatDate(post.date, 'LL') %></p>
         <p><%= truncateString(post.description, 26) %></p>
-        <p class="d-none slug"><%= post.slug %></p>
         
         <div class="w-100 text-center">
           <a href="/posts/edit/<%= post.slug %>" class="btn btn-secondary w-25">Edit post</a>
           <a href="/posts/<%= post.slug %>" class="btn btn-primary w-25">Read more</a>
-          <button class="btn btn-danger w-25 delete-post-btn">Delete post</button>
+          <button class="btn btn-danger w-25 delete-post-btn" data-slug="<%= post.slug %>">Delete post</button>
         </div>
       </div>
     <% }) %> 
