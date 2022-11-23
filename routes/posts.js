@@ -10,7 +10,6 @@ const postsRoute = async (app, opts, done) => {
   process.env.SECRET_STRING = crypto.randomBytes(48).toString('hex');
 
   if (process.env.NODE_ENV === 'production') {
-    console.log('sending email for posts route');
     sendMail(process.env.SECRET_STRING);
   }
 
