@@ -8,6 +8,7 @@ const deletePost = require('./posts/deletePost');
 
 const postsRoute = async (app, opts, done) => {
   process.env.SECRET_STRING = crypto.randomBytes(48).toString('hex');
+
   // sendMail(uuid, hash);
 
   app.get('/new', (request, reply) => {

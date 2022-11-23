@@ -1,5 +1,4 @@
 const deleteBtns = document.querySelectorAll('.delete-post-btn');
-const slugs = document.querySelectorAll('.slug');
 
 deleteBtns.forEach((deleteBtn) => {
   const slug = deleteBtn.dataset.slug;

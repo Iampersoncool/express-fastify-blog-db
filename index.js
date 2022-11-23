@@ -38,7 +38,7 @@ app.register(fastifyHelmet, {
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", 'cdn.jsdelivr.net'],
-      styleSrc: ["'self'", 'cdn.jsdelivr.net'],
+      styleSrc: ["'self'", 'cdn.jsdelivr.net', 'cdnjs.cloudflare.com'],
     },
   },
 });

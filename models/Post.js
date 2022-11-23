@@ -7,6 +7,22 @@ const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 const domPurify = createDOMPurify(new JSDOM().window);
 
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  highlight(code, lang) {
+    const hljs = require('highlight.js');
+    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+    return hljs.highlight(code, { language }).value;
+  },
+  langPrefix: 'hljs language-', // highlight.js css expects a top-level 'hljs' class.
+  pedantic: false,
+  gfm: true,
+  breaks: false,
+  sanitize: false,
+  smartypants: false,
+  xhtml: false,
+});
+
 const postSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -37,8 +53,7 @@ const postSchema = new mongoose.Schema({
 });
 
 postSchema.pre('validate', function (next) {
-  this.slug = slugify(this.title, { lower: true, strict: true });
-  this.sanitizedHtml = domPurify.sanitize(marked(this.rawMarkdown));
+  parseMarkdownAndSlugify(this);
 
   next();
 });
@@ -46,11 +61,15 @@ postSchema.pre('validate', function (next) {
 postSchema.pre('findOneAndUpdate', function (next) {
   const update = this.getUpdate();
 
-  update.slug = slugify(update.title, { lower: true, strict: true });
-  update.sanitizedHtml = domPurify.sanitize(marked(update.rawMarkdown));
+  parseMarkdownAndSlugify(update);
   update.date = moment.utc(update.date).toISOString();
 
   next();
 });
+
+function parseMarkdownAndSlugify(update) {
+  update.slug = slugify(update.title, { lower: true, strict: true });
+  update.sanitizedHtml = domPurify.sanitize(marked(update.rawMarkdown));
+}
 
 module.exports = mongoose.model('Post', postSchema);
