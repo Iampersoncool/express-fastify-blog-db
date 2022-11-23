@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const Post = require('../models/Post');
+const cache = require('../cache');
 
 const createPost = require('./posts/createPost');
 const editPost = require('./posts/editPost');
@@ -11,6 +12,8 @@ const postsRoute = async (app, opts, done) => {
 
   if (process.env.NODE_ENV === 'production') {
     sendMail(process.env.SECRET_STRING);
+  } else {
+    console.log(process.env.SECRET_STRING);
   }
 
   app.get('/new', (request, reply) => {
@@ -18,9 +21,18 @@ const postsRoute = async (app, opts, done) => {
   });
 
   app.get('/:slug', async (request, reply) => {
-    const post = await Post.findOne({ slug: request.params.slug });
+    const { slug } = request.params;
 
+    if (cache.has(slug)) {
+      const post = cache.get(slug);
+      console.log('using cache on route /posts/' + slug);
+      return reply.view('./views/showPost.ejs', { post });
+    }
+
+    const post = await Post.findOne({ slug });
     if (post === null) return reply.status(404).send('Post not found');
+
+    cache.set(post.slug, post);
     return reply.view('./views/showPost.ejs', { post });
   });
 
