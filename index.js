@@ -76,7 +76,7 @@ app.addHook('preHandler', (request, reply, done) => {
 });
 
 app.get('/', async (request, reply) => {
-  const posts = await Posts.find();
+  const posts = await Posts.find().sort({ date: 'desc' });
 
   return reply.view('./views/index.ejs', { posts });
 });

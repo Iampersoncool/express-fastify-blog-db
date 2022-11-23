@@ -22,7 +22,7 @@ const createPost = async (request, reply) => {
 
     return reply.status(403).send('Invalid Code');
   } catch (e) {
-    console.log(e);
+    console.error(e);
     reply.status(500).send('An error occured creating the post.');
   }
 };

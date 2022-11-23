@@ -9,7 +9,10 @@ const deletePost = require('./posts/deletePost');
 const postsRoute = async (app, opts, done) => {
   process.env.SECRET_STRING = crypto.randomBytes(48).toString('hex');
 
-  // sendMail(uuid, hash);
+  if (process.env.NODE_ENV === 'production') {
+    console.log('sending email for posts route');
+    sendMail(process.env.SECRET_STRING);
+  }
 
   app.get('/new', (request, reply) => {
     return reply.view('./views/new.ejs');
@@ -38,11 +41,10 @@ const postsRoute = async (app, opts, done) => {
   done();
 };
 
-async function sendMail(uuid) {
+async function sendMail(string) {
   try {
     const transporter = nodemailer.createTransport({
-      host: 'smtp.mailtrap.io',
-      port: 2525,
+      service: 'gmail',
       auth: {
         user: process.env.NODEMAILER_USER,
         pass: process.env.NODEMAILER_PASS,
@@ -50,10 +52,10 @@ async function sendMail(uuid) {
     });
 
     await transporter.sendMail({
-      from: 'token@superidol.com',
+      from: 'token@lol.com',
       to: process.env.SEND_TO_USER,
       subject: 'Token for express-fastify-blog-db',
-      text: 'Token: ' + uuid,
+      text: 'Token: ' + string,
     });
 
     console.log('Sucesfully sent email!');
