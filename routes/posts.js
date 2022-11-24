@@ -25,7 +25,6 @@ const postsRoute = async (app, opts, done) => {
 
     if (cache.has(slug)) {
       const post = cache.get(slug);
-      console.log('using cache on route /posts/' + slug);
       return reply.view('./views/showPost.ejs', { post });
     }
 
