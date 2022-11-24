@@ -5,6 +5,7 @@ const { marked } = require('marked');
 
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
+const cache = require('../cache');
 const domPurify = createDOMPurify(new JSDOM().window);
 
 marked.setOptions({
@@ -63,6 +64,8 @@ postSchema.pre('findOneAndUpdate', function (next) {
 
   parseMarkdownAndSlugify(update);
   update.date = moment.utc(update.date).toISOString();
+
+  cache.set(update.slug, update);
 
   next();
 });

@@ -1,3 +1,4 @@
+const cache = require('../../cache');
 const Post = require('../../models/Post');
 const compareString = require('../../utils/compareString');
 const getCode = require('../../utils/getCode');
