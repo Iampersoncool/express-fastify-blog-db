@@ -41,6 +41,8 @@ const postsRoute = async (app, opts, done) => {
 
     if (post === null) return reply.status(404).send("Post doesn't exist");
 
+    cache.set(post.slug, post);
+
     return reply.view('./views/edit.ejs', { post });
   });
 
